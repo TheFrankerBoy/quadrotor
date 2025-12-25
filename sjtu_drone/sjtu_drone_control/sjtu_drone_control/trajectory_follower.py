@@ -50,14 +50,12 @@ class SimpleDroneTrajectoryFollower(Node):
         self.hold_cycles_at_wp = max(1, int(self.hold_seconds * self.rate_hz))
         self._hold_counter = 0
 
-        # ---- Trayectoria: A -> ... -> B -> ... -> A (puntos intermedios)
+        # ---- Trayectoria: SOLO 2 puntos (A <-> B), sin discretización
         pA = (-3.397180, -10.136400, 7.0)
         pB = (-9.971850,   3.162810, 7.0)
 
-        self.step_m = 0.75  # 0.5–1.0 suele ir bien
-        self.waypoints: List[Tuple[float, float, float]] = self._build_line_waypoints(
-            pA, pB, step_m=self.step_m, loop=True
-        )
+        # bucle A -> B -> A -> B...
+        self.waypoints: List[Tuple[float, float, float]] = [pA, pB]
         self.wp_idx = 0
 
         # ---- Inicializa RViz msgs
@@ -89,44 +87,11 @@ class SimpleDroneTrajectoryFollower(Node):
         self.timer = self.create_timer(1.0 / self.rate_hz, self._tick)
 
         self.get_logger().info(
-            "Trajectory follower listo: trayectoria 2 puntos "
-            f"A=({pA[0]:.3f},{pA[1]:.3f},{pA[2]:.1f}) -> "
+            "Trajectory follower listo: 2 waypoints "
+            f"A=({pA[0]:.3f},{pA[1]:.3f},{pA[2]:.1f}) <-> "
             f"B=({pB[0]:.3f},{pB[1]:.3f},{pB[2]:.1f}). "
             "Esperando /simple_drone/gt_pose..."
         )
-
-    # -------------------- Trayectoria (A<->B con discretización) --------------------
-    def _build_line_waypoints(
-        self,
-        p0: Tuple[float, float, float],
-        p1: Tuple[float, float, float],
-        step_m: float = 1.0,
-        loop: bool = True,
-    ) -> List[Tuple[float, float, float]]:
-        x0, y0, z0 = p0
-        x1, y1, z1 = p1
-        dx, dy, dz = (x1 - x0), (y1 - y0), (z1 - z0)
-        dist = math.sqrt(dx * dx + dy * dy + dz * dz)
-
-        if dist < 1e-6:
-            return [p0]
-
-        step_m = max(step_m, 1e-3)
-        n = max(1, int(math.ceil(dist / step_m)))
-
-        wps: List[Tuple[float, float, float]] = []
-        # A -> B
-        for i in range(n + 1):
-            t = i / n
-            wps.append((x0 + t * dx, y0 + t * dy, z0 + t * dz))
-
-        if loop:
-            # B -> A sin duplicar extremos
-            for i in range(1, n):
-                t = i / n
-                wps.append((x1 - t * dx, y1 - t * dy, z1 - t * dz))
-
-        return wps
 
     # -------------------- Callbacks / Publicación --------------------
     def _cb_pose(self, msg: Pose):

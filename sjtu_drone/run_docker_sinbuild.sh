@@ -2,28 +2,40 @@
 set -euo pipefail
 
 usage(){
-  echo "Usage: $0 [-r <humble|iron|rolling>]"
-  echo
-  echo "Environment overrides:"
-  echo "  HOST_WS=/path/on/host              (default: /home/franfuentes/ros2_sjtu_ws)"
-  echo "  CONTAINER_WS=/path/in/container    (default: /ros2_ws)"
-  echo "  FORCE_PULL=1                       (force docker pull even if image exists locally)"
+  cat <<'EOF'
+Usage: ./run_docker_sinbuild.sh [-r <humble|iron|rolling>]
+
+Environment overrides:
+  HOST_WS=/path/on/host           (if unset, autodetect by searching for src/)
+  CONTAINER_WS=/path/in/container (default: /ros2_ws)
+  FORCE_PULL=1                    (force docker pull even if image exists locally)
+EOF
   exit 1
 }
 
-ROS_DISTRO="${ROS_DISTRO:-humble}"  # [humble, iron, rolling]
+find_ws_root() {
+  local d
+  d="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  while true; do
+    if [[ -d "${d}/src" ]]; then
+      echo "${d}"
+      return 0
+    fi
+    [[ "${d}" == "/" ]] && return 1
+    d="$(dirname "${d}")"
+  done
+}
+
+ROS_DISTRO="${ROS_DISTRO:-humble}"
 while getopts "r:h" opt; do
   case "$opt" in
     r)
-      if [[ "$OPTARG" != "humble" && "$OPTARG" != "iron" && "$OPTARG" != "rolling" ]]; then
-        echo "Invalid ROS distro: $OPTARG" >&2
-        usage
-      fi
-      ROS_DISTRO="$OPTARG"
+      case "$OPTARG" in
+        humble|iron|rolling) ROS_DISTRO="$OPTARG" ;;
+        *) echo "Invalid ROS distro: $OPTARG" >&2; usage ;;
+      esac
       ;;
-    h|\?)
-      usage
-      ;;
+    h|\?) usage ;;
   esac
 done
 
@@ -31,42 +43,40 @@ IMAGE="georgno/sjtu_drone:ros2-${ROS_DISTRO}"
 FORCE_PULL="${FORCE_PULL:-0}"
 
 XSOCK=/tmp/.X11-unix
-XAUTH=$HOME/.Xauthority
+XAUTH=${XAUTHORITY:-$HOME/.Xauthority}
 
-HOST_WS="${HOST_WS:-/home/franfuentes/ros2_sjtu_ws}"
 CONTAINER_WS="${CONTAINER_WS:-/ros2_ws}"
 
-HOST_SRC="${HOST_WS}/src"
-CONTAINER_SRC="${CONTAINER_WS}/src"
-
-if [[ ! -d "${HOST_SRC}" ]]; then
-  echo "Host src/ folder not found: ${HOST_SRC}" >&2
-  exit 1
+if [[ -z "${HOST_WS:-}" ]]; then
+  if ! HOST_WS="$(find_ws_root)"; then
+    echo "ERROR: Could not autodetect HOST_WS. Set HOST_WS=/path/to/colcon_ws (must contain src/)." >&2
+    exit 1
+  fi
 fi
 
-# Ensure persistent dirs exist (in case you rely on host install/build/log)
+HOST_SRC="${HOST_WS}/src"
+[[ -d "${HOST_SRC}" ]] || { echo "Host src/ folder not found: ${HOST_SRC}" >&2; exit 1; }
+
 mkdir -p "${HOST_WS}/build" "${HOST_WS}/install" "${HOST_WS}/log"
 
 if [[ "${FORCE_PULL}" == "1" ]]; then
   docker pull "${IMAGE}"
 else
-  if ! docker image inspect "${IMAGE}" >/dev/null 2>&1; then
-    docker pull "${IMAGE}"
-  fi
+  docker image inspect "${IMAGE}" >/dev/null 2>&1 || docker pull "${IMAGE}"
 fi
 
-xhost +local:docker >/dev/null
+xhost +local:docker >/dev/null || true
 
 docker run \
   -it --rm \
-  -v ${HOST_SRC}:${CONTAINER_SRC}:rw \
-  -v ${HOST_WS}/build:${CONTAINER_WS}/build:rw \
-  -v ${HOST_WS}/install:${CONTAINER_WS}/install:rw \
-  -v ${HOST_WS}/log:${CONTAINER_WS}/log:rw \
-  -v ${XSOCK}:${XSOCK} \
-  -v ${XAUTH}:${XAUTH} \
-  -e DISPLAY=${DISPLAY} \
-  -e XAUTHORITY=${XAUTH} \
+  -v "${HOST_SRC}:${CONTAINER_WS}/src:rw" \
+  -v "${HOST_WS}/build:${CONTAINER_WS}/build:rw" \
+  -v "${HOST_WS}/install:${CONTAINER_WS}/install:rw" \
+  -v "${HOST_WS}/log:${CONTAINER_WS}/log:rw" \
+  -v "${XSOCK}:${XSOCK}" \
+  -v "${XAUTH}:${XAUTH}" \
+  -e DISPLAY="${DISPLAY}" \
+  -e XAUTHORITY="${XAUTH}" \
   --env=QT_X11_NO_MITSHM=1 \
   --privileged \
   --net=host \
@@ -77,15 +87,15 @@ docker run \
     set -euo pipefail
     cd ${CONTAINER_WS}
 
-    echo '[run_docker] Sourcing ROS + workspace overlay (no build)...'
+    echo '[run_docker_sinbuild] Sourcing ROS + overlay (no build)...'
     set +u
     source /opt/ros/${ROS_DISTRO}/setup.bash
     source install/setup.bash
     set -u
 
-    echo '[run_docker] Launching sjtu_drone...'
+    echo '[run_docker_sinbuild] Launching sjtu_drone...'
     ros2 launch sjtu_drone_bringup sjtu_drone_bringup.launch.py
   "
 
-xhost -local:docker >/dev/null
+xhost -local:docker >/dev/null || true
 

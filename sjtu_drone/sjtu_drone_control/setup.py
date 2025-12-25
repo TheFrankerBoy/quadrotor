@@ -8,7 +8,7 @@ setup(
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
-            ['resource/' + package_name]),
+         ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
@@ -23,7 +23,9 @@ setup(
             'teleop = sjtu_drone_control.teleop:main',
             'teleop_joystick = sjtu_drone_control.teleop_joystick:main',
             'open_loop_control = sjtu_drone_control.open_loop_control:main',
-            'drone_position_control = sjtu_drone_control.drone_position_control:main'
+            'drone_position_control = sjtu_drone_control.drone_position_control:main',
+            'trajectory_follower = sjtu_drone_control.trajectory_follower:main',
         ],
     },
 )
+

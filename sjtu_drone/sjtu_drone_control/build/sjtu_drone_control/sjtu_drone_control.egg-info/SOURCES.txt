@@ -1,0 +1,17 @@
+package.xml
+setup.cfg
+setup.py
+resource/sjtu_drone_control
+sjtu_drone_control/__init__.py
+sjtu_drone_control/drone_position_control.py
+sjtu_drone_control/open_loop_control.py
+sjtu_drone_control/teleop.py
+sjtu_drone_control/teleop_joystick.py
+sjtu_drone_control/trajectory_follower.py
+sjtu_drone_control.egg-info/PKG-INFO
+sjtu_drone_control.egg-info/SOURCES.txt
+sjtu_drone_control.egg-info/dependency_links.txt
+sjtu_drone_control.egg-info/entry_points.txt
+sjtu_drone_control.egg-info/requires.txt
+sjtu_drone_control.egg-info/top_level.txt
+sjtu_drone_control.egg-info/zip-safe

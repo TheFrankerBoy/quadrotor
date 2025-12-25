@@ -50,19 +50,23 @@ class SimpleDroneTrajectoryFollower(Node):
         self.hold_cycles_at_wp = max(1, int(self.hold_seconds * self.rate_hz))
         self._hold_counter = 0
 
-        # ---- Trayectoria: cuadrado en varias alturas
-        self.square_size = 3.0           # lado del cuadrado
-        self.square_origin = (0.0, 0.0)  # esquina inferior-izquierda del cuadrado
+        # ---- Trayectoria: S en varias alturas
+        self.s_length = 6.0              # largo en X
+        self.s_amplitude = 2.0           # amplitud en Y
+        self.s_points = 80               # puntos por capa (más = más suave)
+        self.s_origin = (0.0, 0.0)       # centro/origen (ver _build_s_multiz)
         self.heights = [2.0, 3.5, 5.0]   # capas en Z
-        self.waypoints: List[Tuple[float, float, float]] = self._build_square_multiz(
-            origin=self.square_origin,
-            size=self.square_size,
+        self.waypoints: List[Tuple[float, float, float]] = self._build_s_multiz(
+            origin=self.s_origin,
+            length=self.s_length,
+            amplitude=self.s_amplitude,
             heights=self.heights,
+            n_points=self.s_points,
         )
         self.wp_idx = 0
 
         # ---- Inicializa RViz msgs
-        self.frame_id = "map"  # si tu RViz usa otro Fixed Frame, cámbialo aquí
+        self.frame_id = "world"  # si tu RViz usa otro Fixed Frame, cámbialo aquí
         self.path_msg = Path()
         self.path_msg.header.frame_id = self.frame_id
 
@@ -90,26 +94,45 @@ class SimpleDroneTrajectoryFollower(Node):
         self.timer = self.create_timer(1.0 / self.rate_hz, self._tick)
 
         self.get_logger().info(
-            f"Trajectory follower listo: cuadrado size={self.square_size} en alturas={self.heights}. "
-            f"Esperando /simple_drone/gt_pose..."
+            f"Trajectory follower listo: S length={self.s_length} amp={self.s_amplitude} "
+            f"en alturas={self.heights}. Esperando /simple_drone/gt_pose..."
         )
 
-    # -------------------- Trayectoria (cuadrado en capas) --------------------
-    def _build_square_multiz(self, origin: Tuple[float, float], size: float, heights: List[float]) -> List[Tuple[float, float, float]]:
+    # -------------------- Trayectoria (S en capas) --------------------
+    def _build_s_multiz(
+        self,
+        origin: Tuple[float, float],
+        length: float,
+        amplitude: float,
+        heights: List[float],
+        n_points: int = 60,
+    ) -> List[Tuple[float, float, float]]:
+        """
+        Genera una trayectoria en forma de S usando una sinusoide en Y:
+          x recorre [-L/2, +L/2]
+          y = A * sin(2π * t)  (una oscilación completa: forma "S")
+        Se replica para cada z en heights. Para evitar saltos grandes entre capas,
+        se alterna el sentido (zig-zag) entre capas.
+        """
         ox, oy = origin
-        # cuadrado cerrado (vuelve al inicio)
-        base_xy = [
-            (ox,       oy),
-            (ox+size,  oy),
-            (ox+size,  oy+size),
-            (ox,       oy+size),
-            (ox,       oy),
-        ]
+        n = max(2, int(n_points))
+
+        # Parametrización 0..1
+        ts = [i / (n - 1) for i in range(n)]
+        xs = [ox + (t - 0.5) * length for t in ts]
+        ys = [oy + amplitude * math.sin(2.0 * math.pi * t) for t in ts]
 
         wps: List[Tuple[float, float, float]] = []
-        for z in heights:
-            for x, y in base_xy:
-                wps.append((x, y, z))
+        for k, z in enumerate(heights):
+            # alterna el sentido para conectar capas sin teletransporte
+            if (k % 2) == 0:
+                it = range(n)
+            else:
+                it = range(n - 1, -1, -1)
+
+            for i in it:
+                wps.append((xs[i], ys[i], z))
+
         return wps
 
     # -------------------- Callbacks / Publicación --------------------

@@ -1,4 +1,4 @@
-cd /opt/ros/iron
+cd ../../opt/ros/humble
 source setup.sh
 cd /ros2_ws
 colcon build --packages-select sjtu_drone_control --symlink-install

@@ -49,6 +49,39 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
+
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: TrajectoryMarker
+      Namespaces: {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /simple_drone/trajectory_marker
+      Value: true
+
+    - Class: rviz_default_plugins/Path
+      Enabled: true
+      Name: TrajectoryPath
+      Buffer Length: 1000
+      Color: 0; 255; 0
+      Alpha: 1
+      Line Style: Lines
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Style: None
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /simple_drone/trajectory_path
+      Value: true
+
     - Class: rviz_common/Group
       Displays:
         - Class: rviz_default_plugins/Axes
@@ -68,8 +101,7 @@ Visualization Manager:
           Show Arrows: true
           Show Axes: true
           Show Names: false
-          Tree:
-            {}
+          Tree: {}
           Update Interval: 0
           Value: false
         - Alpha: 1
@@ -121,10 +153,11 @@ Visualization Manager:
           Visual Enabled: true
       Enabled: true
       Name: Robot
+
     - Class: rviz_common/Group
       Displays:
         - Alpha: 0.5
-          Buffer Length: 1
+          Buffer Length: 1000
           Class: rviz_default_plugins/Range
           Color: 255; 255; 255
           Enabled: true
@@ -195,10 +228,11 @@ Visualization Manager:
           fixed_frame_orientation: true
       Enabled: true
       Name: Sensors
+
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: simple_drone/base_link
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:

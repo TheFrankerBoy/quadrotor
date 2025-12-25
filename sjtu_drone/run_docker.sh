@@ -11,7 +11,7 @@ usage(){
   exit 1
 }
 
-ROS_DISTRO="${ROS_DISTRO:-iron}"  # [humble, iron, rolling]
+ROS_DISTRO="${ROS_DISTRO:-humble}"  # [humble, iron, rolling]
 while getopts "r:h" opt; do
   case "$opt" in
     r)
@@ -33,9 +33,6 @@ FORCE_PULL="${FORCE_PULL:-0}"
 XSOCK=/tmp/.X11-unix
 XAUTH=$HOME/.Xauthority
 
-# ----------------------------
-# Workspace mount (host -> container): mount ONLY src/
-# ----------------------------
 HOST_WS="${HOST_WS:-/home/franfuentes/ros2_sjtu_ws}"
 CONTAINER_WS="${CONTAINER_WS:-/ros2_ws}"
 
@@ -48,7 +45,9 @@ if [[ ! -d "${HOST_SRC}" ]]; then
   exit 1
 fi
 
-# Only pull if the image is missing locally, unless FORCE_PULL=1
+# Ensure persistent dirs exist on host
+mkdir -p "${HOST_WS}/build" "${HOST_WS}/install" "${HOST_WS}/log"
+
 if [[ "${FORCE_PULL}" == "1" ]]; then
   docker pull "${IMAGE}"
 else
@@ -57,15 +56,16 @@ else
   fi
 fi
 
-# X11 access for GUI tools (Gazebo/RViz)
 xhost +local:docker >/dev/null
 
-# Bind-mount ONLY src/ so you keep the image's prebuilt install/ (avoids ABI issues with Gazebo plugins)
 VOLUMES="-v ${HOST_SRC}:${CONTAINER_SRC}:rw"
 
 docker run \
   -it --rm \
   ${VOLUMES} \
+  -v ${HOST_WS}/build:${CONTAINER_WS}/build:rw \
+  -v ${HOST_WS}/install:${CONTAINER_WS}/install:rw \
+  -v ${HOST_WS}/log:${CONTAINER_WS}/log:rw \
   -v ${XSOCK}:${XSOCK} \
   -v ${XAUTH}:${XAUTH} \
   -e DISPLAY=${DISPLAY} \
@@ -75,6 +75,33 @@ docker run \
   --net=host \
   --name="sjtu_drone" \
   -w "${CONTAINER_WS}" \
-  "${IMAGE}"
+  "${IMAGE}" \
+  bash -lc "
+    set -euo pipefail
+    cd ${CONTAINER_WS}
+
+    # IMPORTANT:
+    # No borramos install/log porque ahora están montados desde el host.
+    # Si cambiaste la ruta de los paquetes y te sale el error de CMakeCache,
+    # borra SOLO build (o build/<paquete>).
+    echo '[run_docker] Cleaning build cache (safe)...'
+    rm -rf build/*
+
+    echo '[run_docker] Building (symlink-install)...'
+    set +u
+    source /opt/ros/${ROS_DISTRO}/setup.bash
+    set -u
+
+    colcon build --symlink-install
+
+    echo '[run_docker] Sourcing overlay...'
+    set +u
+    source install/setup.bash
+    set -u
+
+    echo '[run_docker] Launching sjtu_drone...'
+    ros2 launch sjtu_drone_bringup sjtu_drone_bringup.launch.py
+  "
 
 xhost -local:docker >/dev/null
+

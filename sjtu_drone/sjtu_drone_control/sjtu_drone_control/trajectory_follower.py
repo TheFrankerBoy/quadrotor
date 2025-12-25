@@ -15,13 +15,13 @@ class SimpleDroneTrajectoryFollower(Node):
     """
     Publica:
       - /simple_drone/posctrl  (std_msgs/Bool)  -> True
-      - /simple_drone/cmd_vel  (geometry_msgs/Twist) con linear.{x,y,z} = objetivo
+      - /simple_drone/cmd_vel  (geometry_msgs/Twist) con linear.{x,y,z} = objetivo (modo posctrl)
     y usa:
       - /simple_drone/gt_pose (geometry_msgs/Pose) para decidir cuándo pasar al siguiente punto.
 
-    Visualización RViz:
-      - /simple_drone/trajectory_path    (nav_msgs/Path)
-      - /simple_drone/trajectory_marker  (visualization_msgs/Marker)  LINE_STRIP
+    Nota (sjtu_drone):
+      - posctrl=True: cmd_vel se interpreta como "pose target" (x,y,z)
+      - posctrl=False: cmd_vel se interpreta como control normal (velocidad/tilt según modo)
     """
 
     def __init__(self):
@@ -50,23 +50,18 @@ class SimpleDroneTrajectoryFollower(Node):
         self.hold_cycles_at_wp = max(1, int(self.hold_seconds * self.rate_hz))
         self._hold_counter = 0
 
-        # ---- Trayectoria: S en varias alturas
-        self.s_length = 6.0              # largo en X
-        self.s_amplitude = 2.0           # amplitud en Y
-        self.s_points = 80               # puntos por capa (más = más suave)
-        self.s_origin = (0.0, 0.0)       # centro/origen (ver _build_s_multiz)
-        self.heights = [2.0, 3.5, 5.0]   # capas en Z
-        self.waypoints: List[Tuple[float, float, float]] = self._build_s_multiz(
-            origin=self.s_origin,
-            length=self.s_length,
-            amplitude=self.s_amplitude,
-            heights=self.heights,
-            n_points=self.s_points,
+        # ---- Trayectoria: A -> ... -> B -> ... -> A (puntos intermedios)
+        pA = (-3.397180, -10.136400, 7.0)
+        pB = (-9.971850,   3.162810, 7.0)
+
+        self.step_m = 0.75  # 0.5–1.0 suele ir bien
+        self.waypoints: List[Tuple[float, float, float]] = self._build_line_waypoints(
+            pA, pB, step_m=self.step_m, loop=True
         )
         self.wp_idx = 0
 
         # ---- Inicializa RViz msgs
-        self.frame_id = "world"  # si tu RViz usa otro Fixed Frame, cámbialo aquí
+        self.frame_id = "world"
         self.path_msg = Path()
         self.path_msg.header.frame_id = self.frame_id
 
@@ -87,51 +82,49 @@ class SimpleDroneTrajectoryFollower(Node):
         self._publish_posctrl(True)
         self._try_takeoff_once()
 
-        # ---- Publica una vez la trayectoria “planeada” para RViz (línea completa)
+        # ---- Publica una vez la trayectoria “planeada” para RViz
         self._publish_planned_trajectory()
 
         # Timer principal
         self.timer = self.create_timer(1.0 / self.rate_hz, self._tick)
 
         self.get_logger().info(
-            f"Trajectory follower listo: S length={self.s_length} amp={self.s_amplitude} "
-            f"en alturas={self.heights}. Esperando /simple_drone/gt_pose..."
+            "Trajectory follower listo: trayectoria 2 puntos "
+            f"A=({pA[0]:.3f},{pA[1]:.3f},{pA[2]:.1f}) -> "
+            f"B=({pB[0]:.3f},{pB[1]:.3f},{pB[2]:.1f}). "
+            "Esperando /simple_drone/gt_pose..."
         )
 
-    # -------------------- Trayectoria (S en capas) --------------------
-    def _build_s_multiz(
+    # -------------------- Trayectoria (A<->B con discretización) --------------------
+    def _build_line_waypoints(
         self,
-        origin: Tuple[float, float],
-        length: float,
-        amplitude: float,
-        heights: List[float],
-        n_points: int = 60,
+        p0: Tuple[float, float, float],
+        p1: Tuple[float, float, float],
+        step_m: float = 1.0,
+        loop: bool = True,
     ) -> List[Tuple[float, float, float]]:
-        """
-        Genera una trayectoria en forma de S usando una sinusoide en Y:
-          x recorre [-L/2, +L/2]
-          y = A * sin(2π * t)  (una oscilación completa: forma "S")
-        Se replica para cada z en heights. Para evitar saltos grandes entre capas,
-        se alterna el sentido (zig-zag) entre capas.
-        """
-        ox, oy = origin
-        n = max(2, int(n_points))
+        x0, y0, z0 = p0
+        x1, y1, z1 = p1
+        dx, dy, dz = (x1 - x0), (y1 - y0), (z1 - z0)
+        dist = math.sqrt(dx * dx + dy * dy + dz * dz)
 
-        # Parametrización 0..1
-        ts = [i / (n - 1) for i in range(n)]
-        xs = [ox + (t - 0.5) * length for t in ts]
-        ys = [oy + amplitude * math.sin(2.0 * math.pi * t) for t in ts]
+        if dist < 1e-6:
+            return [p0]
+
+        step_m = max(step_m, 1e-3)
+        n = max(1, int(math.ceil(dist / step_m)))
 
         wps: List[Tuple[float, float, float]] = []
-        for k, z in enumerate(heights):
-            # alterna el sentido para conectar capas sin teletransporte
-            if (k % 2) == 0:
-                it = range(n)
-            else:
-                it = range(n - 1, -1, -1)
+        # A -> B
+        for i in range(n + 1):
+            t = i / n
+            wps.append((x0 + t * dx, y0 + t * dy, z0 + t * dz))
 
-            for i in it:
-                wps.append((xs[i], ys[i], z))
+        if loop:
+            # B -> A sin duplicar extremos
+            for i in range(1, n):
+                t = i / n
+                wps.append((x1 - t * dx, y1 - t * dy, z1 - t * dz))
 
         return wps
 
@@ -145,7 +138,6 @@ class SimpleDroneTrajectoryFollower(Node):
         self.pub_posctrl.publish(m)
 
     def _try_takeoff_once(self):
-        # Si tu simulación no usa takeoff/land, puedes borrarlo.
         self.pub_takeoff.publish(Empty())
 
     def _publish_goal(self, x: float, y: float, z: float):
@@ -167,7 +159,6 @@ class SimpleDroneTrajectoryFollower(Node):
 
     # -------------------- RViz helpers --------------------
     def _publish_planned_trajectory(self):
-        """Publica el PATH/MARKER completos de la trayectoria objetivo (preview)."""
         now = self.get_clock().now().to_msg()
 
         path = Path()
@@ -206,7 +197,6 @@ class SimpleDroneTrajectoryFollower(Node):
         self.pub_marker.publish(marker)
 
     def _append_executed_point(self, x: float, y: float, z: float):
-        """Añade el punto actual al Path/Marker de trayectoria ejecutada."""
         now = self.get_clock().now().to_msg()
 
         ps = PoseStamped()
@@ -236,12 +226,10 @@ class SimpleDroneTrajectoryFollower(Node):
             self.get_logger().info("Aún no llega /simple_drone/gt_pose...", throttle_duration_sec=1.0)
             return
 
-        # waypoint actual
         x, y, z = self.waypoints[self.wp_idx]
-
         d = self._dist_to(x, y, z)
+
         if d <= self.arrival_tol:
-            # Llegó: mantén un poco y cambia
             if self._hold_counter < self.hold_cycles_at_wp:
                 self._hold_counter += 1
                 self._publish_goal(x, y, z)
@@ -254,11 +242,7 @@ class SimpleDroneTrajectoryFollower(Node):
             self.get_logger().info(
                 f"Waypoint alcanzado. Siguiente -> idx={self.wp_idx} (x={nx:.2f}, y={ny:.2f}, z={nz:.2f})"
             )
-            self._publish_goal(nx, ny, nz)
-            self._append_executed_point(nx, ny, nz)
-            return
 
-        # Si no llegó, sigue empujando al objetivo actual
         self._publish_goal(x, y, z)
         self._append_executed_point(x, y, z)
         self.get_logger().info(

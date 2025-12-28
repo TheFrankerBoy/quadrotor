@@ -29,7 +29,7 @@ void PIDController::Load(sdf::ElementPtr _sdf, const std::string & prefix)
 {
   gain_p = 5.0;
   gain_d = 1.0;
-  gain_i = 0.0;
+  gain_i = 1.0;
   time_constant = 0.0;
   limit = -1.0;
 

@@ -1,3 +1,4 @@
 import sys
-sys.real_prefix = sys.prefix
-sys.prefix = sys.exec_prefix = '/ros2_ws/src/install/sjtu_drone_control'
+if sys.prefix == '/usr':
+    sys.real_prefix = sys.prefix
+    sys.prefix = sys.exec_prefix = '/home/franfuentes/ros2_sjtu_ws/src/install/sjtu_drone_control'

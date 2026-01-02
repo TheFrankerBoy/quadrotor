@@ -1,0 +1,18 @@
+# ROS 2 / colcon
+build/
+install/
+log/
+
+# PX4
+PX4-Autopilot/
+
+# Gazebo
+*.log
+*.db
+
+# tmux
+*.tmux
+
+# Editor / OS
+.DS_Store
+*.swp

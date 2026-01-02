@@ -1,3 +1,0 @@
-# generated from colcon_core/shell/template/hook_prepend_value.sh.em
-
-_colcon_prepend_unique_value PYTHONPATH "/ros2_ws/src/sjtu_drone/sjtu_drone_control/build/sjtu_drone_control"

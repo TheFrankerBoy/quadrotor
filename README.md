@@ -59,6 +59,6 @@ tmux attach -t px4_sim
 tmux kill-session -t px4_sim
 ``````
 💡 Alternativamente, el script de lanzamiento incluye una opción recomendada:
-./scr
-```textipts/run_sim.sh --kill
-
+```text
+pts/run_sim.sh --kill
+```

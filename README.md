@@ -34,20 +34,28 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 ├── ws_sensor_combined
 └── ws_offboard_control
 ``````
----�️##�️ Gestión de la simulaci(n (t)ux)a simulación se ejecuta dentro de una **sesión tmux** llamada `px4_sim`, que permite
+## 🖥️ Gestión de la simulación (tmux)
+
+La simulación se ejecuta dentro de una **sesión tmux** llamada `px4_sim`, que permite
 gestionar múltiples procesos (PX4, ROS2, XRCE Agent, etc.) de forma ordenada.
 
->
+> ⚠️ **No es necesario conocer tmux** para usar este proyecto.  
+> Los siguientes comandos básicos son suficientes.
 
+### Salir sin detener la simulación (desde tmux)
 ```text
-⚠️ **No es necesario conocer tmux** para usar este proyecto.  
-> Los siguientes comandos básicos son interesantes.
+Ctrl + b → d
+```
 
-### Salir sin detener la simulación (dentro de tmux)
-Ctrl + b  →  d
-
-### Volver a la simulación (desde un terminal)
+### Salir sin detener la simulación (n (desde cualquier terminal)
+``````text
 tmux attach -t px4_sim
+``````
 
-## Detener todo el sistema (dentro de tmux)
+
+
+### Detener TODO el sistema (desde cualquier terminal)
+``````text
 tmux kill-session -t px4_sim
+``````
+

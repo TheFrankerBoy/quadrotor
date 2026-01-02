@@ -33,13 +33,14 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 ├── Micro-XRCE-DDS-Agent
 ├── ws_sensor_combined
 └── ws_offboard_control
-
-## 🖥️ Gestión de la simulación (tmux)
-
-La simulación se ejecuta dentro de una **sesión tmux** llamada `px4_sim`, que permite
+``````
+---�️##�️ Gestión de la simulaci(n (t)ux)a simulación se ejecuta dentro de una **sesión tmux** llamada `px4_sim`, que permite
 gestionar múltiples procesos (PX4, ROS2, XRCE Agent, etc.) de forma ordenada.
 
-> ⚠️ **No es necesario conocer tmux** para usar este proyecto.  
+>
+
+```text
+⚠️ **No es necesario conocer tmux** para usar este proyecto.  
 > Los siguientes comandos básicos son interesantes.
 
 ### Salir sin detener la simulación (dentro de tmux)

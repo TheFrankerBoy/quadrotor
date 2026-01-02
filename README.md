@@ -57,8 +57,8 @@ tmux attach -t px4_sim
 ### Detener TODO el sistema (desde cualquier terminal)
 ``````text
 tmux kill-session -t px4_sim
-
-💡 Alternativamente, el script de lanzamiento incluye una opción recomendada:
-./scripts/run_sim.sh --kill
 ``````
+💡 Alternativamente, el script de lanzamiento incluye una opción recomendada:
+./scr
+```textipts/run_sim.sh --kill
 

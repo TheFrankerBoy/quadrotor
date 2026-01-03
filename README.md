@@ -94,6 +94,12 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 > Se recomienda seguir el tutorial básico en la
 > página oficial de PX4: https://docs.px4.io/main/en/ros2/user_guide
 
+Además, también se necesitará tener la imagen de QGroundControl (descargable en el sitio oficial) con la siguiente estructura:
+```text
+~/imagenes_Software/
+└── QGroundControl-x86_64.AppImage
+````
+
 ---
 
 ## 🖥️ Gestión de la simulación (tmux)

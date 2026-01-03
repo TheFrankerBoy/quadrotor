@@ -16,11 +16,12 @@ PX4_DIR="$CPR_PX4_DIR/PX4-Autopilot"
 XRCE_DIR="$CPR_PX4_DIR/Micro-XRCE-DDS-Agent/build"
 WS_SENSOR="$CPR_PX4_DIR/ws_sensor_combined"
 WS_OFFBOARD="$CPR_PX4_DIR/ws_offboard_control"
+WS_BRIDGE="$CPR_PX4_DIR/ws_gz_bridge"
 
 ROS_SETUP="/opt/ros/humble/setup.bash"
 
 # Comandos principales
-PX4_CMD="make px4_sitl gz_x500"
+PX4_CMD="PX4_GZ_WORLD=baylands make px4_sitl gz_x500_lidar_2d"
 XRCE_CMD="MicroXRCEAgent udp4 --port 8888"
 LISTENER_CMD="ros2 launch px4_ros_com sensor_combined_listener.launch.py"
 OFFBOARD_CMD="ros2 run px4_ros_com offboard_control"

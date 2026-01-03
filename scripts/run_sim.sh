@@ -16,7 +16,6 @@ PX4_DIR="$CPR_PX4_DIR/PX4-Autopilot"
 XRCE_DIR="$CPR_PX4_DIR/Micro-XRCE-DDS-Agent/build"
 WS_SENSOR="$CPR_PX4_DIR/ws_sensor_combined"
 WS_OFFBOARD="$CPR_PX4_DIR/ws_offboard_control"
-WS_BRIDGE="$CPR_PX4_DIR/ws_gz_bridge"
 
 ROS_SETUP="/opt/ros/humble/setup.bash"
 
@@ -176,6 +175,7 @@ P_OFFB="$SESSION:0.3"
 # ===============================
 # COMANDOS (en panes)
 # ===============================
+
 send "$P_PX4" "cd \"$PX4_DIR\" && $PX4_CMD"
 send "$P_XRCE" "cd \"$XRCE_DIR\" && $XRCE_CMD"
 

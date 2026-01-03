@@ -59,7 +59,7 @@ Características:
   <img src="docs/images/lidar_visualization.png" width="600"/>
 </p>
 
-> 📸 *Visualización del LIDAR detectando obstáculos en Gazebo*
+> 📸 *Visualización del LIDAR detectando obstáculos en Gazebo y lectura de datos en QGC*
 
 ---
 

@@ -59,7 +59,7 @@ Características:
   <img src="docs/images/lidar_visualization.png" width="600"/>
 </p>
 
-> 📸 *Visualización del LIDAR detectando obstáculos en Gazebo*
+> 📸 *Visualización del LIDAR detectando obstáculos en Gazebo y lectura de datos en QGC*
 
 ---
 
@@ -87,4 +87,38 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 ~/CPR_PX4/
 ├── PX4-Autopilot
 ├── Micro-XRCE-DDS-Agent
-└── quadrotor/          ← este repositorio
+├── ws_sensor_combined
+└── ws_offboard_control
+````
+> ⚠️ **Si no se poseen estas instalaciones:**
+> Se recomienda seguir el tutorial básico en la
+> página oficial de PX4: https://docs.px4.io/main/en/ros2/user_guide
+
+---
+
+## 🖥️ Gestión de la simulación (tmux)
+
+La simulación se ejecuta dentro de una **sesión tmux** llamada `px4_sim`, que permite
+gestionar múltiples procesos (PX4, ROS2, XRCE Agent, etc.) de forma ordenada.
+
+> ⚠️ **No es necesario conocer tmux** para usar este proyecto.  
+> Los siguientes comandos básicos son suficientes.
+
+### Salir sin detener la simulación (desde tmux)
+```text
+Ctrl + b → d
+```
+
+### Salir sin detener la simulación (n (desde cualquier terminal)
+``````text
+tmux attach -t px4_sim
+``````
+
+### Detener TODO el sistema (desde cualquier terminal)
+``````text
+tmux kill-session -t px4_sim
+``````
+💡 Alternativamente, el script de lanzamiento incluye una opción recomendada (desde la carpeta raíz del repositorio):
+```text
+./scripts/run_sim.sh --kill
+```

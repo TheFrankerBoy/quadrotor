@@ -88,3 +88,32 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 ├── PX4-Autopilot
 ├── Micro-XRCE-DDS-Agent
 └── quadrotor/          ← este repositorio
+````
+---
+
+## 🖥️ Gestión de la simulación (tmux)
+
+La simulación se ejecuta dentro de una **sesión tmux** llamada `px4_sim`, que permite
+gestionar múltiples procesos (PX4, ROS2, XRCE Agent, etc.) de forma ordenada.
+
+> ⚠️ **No es necesario conocer tmux** para usar este proyecto.  
+> Los siguientes comandos básicos son suficientes.
+
+### Salir sin detener la simulación (desde tmux)
+```text
+Ctrl + b → d
+```
+
+### Salir sin detener la simulación (n (desde cualquier terminal)
+``````text
+tmux attach -t px4_sim
+``````
+
+### Detener TODO el sistema (desde cualquier terminal)
+``````text
+tmux kill-session -t px4_sim
+``````
+💡 Alternativamente, el script de lanzamiento incluye una opción recomendada (desde la carpeta raíz del repositorio):
+```text
+./scripts/run_sim.sh --kill
+```

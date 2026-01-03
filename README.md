@@ -91,7 +91,8 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 └── ws_offboard_control
 ````
 > ⚠️ **Si no se poseen estas instalaciones:**
-> Se recomienda seguir el tutorial básico en la página oficial de PX4: https://docs.px4.io/main/en/ros2/user_guide
+> Se recomienda seguir el tutorial básico en la
+> página oficial de PX4: https://docs.px4.io/main/en/ros2/user_guide
 
 ---
 

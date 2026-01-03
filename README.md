@@ -92,7 +92,7 @@ Se asume que todo el entorno de simulación está en una carpeta externa con la 
 ````
 > ⚠️ **Si no se poseen estas instalaciones**, se recomienda seguir el tutorial básico 
 > en la página oficial de PX4: https://docs.px4.io/main/en/ros2/user_guide
-(ver tutorial básico en la página oficial de PX4 con la instalación para la instalación de todas estas carpetas)
+
 ---
 
 ## 🖥️ Gestión de la simulación (tmux)

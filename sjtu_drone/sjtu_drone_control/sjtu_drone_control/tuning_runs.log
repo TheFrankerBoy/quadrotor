@@ -1,0 +1,69 @@
+[2026-01-04T13:54:32] RUN_START run_id=1 roll_p=8.0 roll_d=3.0 vel_xy_p=4.0 master_port=11346
+[2026-01-04T13:57:42] RUN_START run_id=1 roll_p=6.0 roll_d=2.0 vel_xy_p=5.0 master_port=11346
+[2026-01-04T13:59:06] RUN_START run_id=1 roll_p=6.0 roll_d=2.0 vel_xy_p=5.0 master_port=11346
+[2026-01-04T14:00:10] RUN_END_OK run_id=1 cost=6.846722143661852
+[2026-01-04T14:00:10] RUN_START run_id=2 roll_p=6.0 roll_d=3.0 vel_xy_p=5.0 master_port=11347
+[2026-01-04T14:01:06] RUN_END_OK run_id=2 cost=1.4924504367198188
+[2026-01-04T14:01:06] RUN_START run_id=3 roll_p=6.0 roll_d=4.0 vel_xy_p=5.0 master_port=11348
+[2026-01-04T14:02:04] RUN_END_OK run_id=3 cost=4.281247746061023
+[2026-01-04T14:02:04] RUN_START run_id=4 roll_p=6.0 roll_d=5.0 vel_xy_p=5.0 master_port=11349
+[2026-01-04T14:02:34] RUN_START run_id=1 roll_p=6.0 roll_d=2.0 vel_xy_p=5.0 master_port=11346
+[2026-01-04T14:04:35] RUN_END_OK run_id=1 cost=7.35957067646774
+[2026-01-04T14:04:35] RUN_START run_id=2 roll_p=6.0 roll_d=3.0 vel_xy_p=5.0 master_port=11347
+[2026-01-04T14:06:33] RUN_END_OK run_id=2 cost=2.6018671419595365
+[2026-01-04T14:06:33] RUN_START run_id=3 roll_p=6.0 roll_d=4.0 vel_xy_p=5.0 master_port=11348
+[2026-01-04T14:08:32] RUN_END_OK run_id=3 cost=6.8343120806030555
+[2026-01-04T14:08:32] RUN_START run_id=4 roll_p=6.0 roll_d=5.0 vel_xy_p=5.0 master_port=11349
+[2026-01-04T14:10:28] RUN_END_OK run_id=4 cost=2.2392704573202056
+[2026-01-04T14:10:28] RUN_START run_id=5 roll_p=6.0 roll_d=6.0 vel_xy_p=5.0 master_port=11350
+[2026-01-04T14:12:24] RUN_END_OK run_id=5 cost=4.212974714957059
+[2026-01-04T14:12:24] RUN_START run_id=6 roll_p=6.0 roll_d=8.0 vel_xy_p=5.0 master_port=11351
+[2026-01-04T14:14:25] RUN_END_OK run_id=6 cost=5.138621259312652
+[2026-01-04T14:14:25] RUN_START run_id=7 roll_p=8.0 roll_d=2.0 vel_xy_p=5.0 master_port=11352
+[2026-01-04T14:16:24] RUN_END_OK run_id=7 cost=8.029404730734678
+[2026-01-04T14:16:24] RUN_START run_id=8 roll_p=8.0 roll_d=3.0 vel_xy_p=5.0 master_port=11353
+[2026-01-04T14:18:19] RUN_END_OK run_id=8 cost=5.198094321226942
+[2026-01-04T14:18:19] RUN_START run_id=9 roll_p=8.0 roll_d=4.0 vel_xy_p=5.0 master_port=11354
+[2026-01-04T14:20:19] RUN_END_OK run_id=9 cost=5.951294759354909
+[2026-01-04T14:20:19] RUN_START run_id=10 roll_p=8.0 roll_d=5.0 vel_xy_p=5.0 master_port=11355
+[2026-01-04T14:22:16] RUN_END_OK run_id=10 cost=101.53693528528609
+[2026-01-04T14:22:16] RUN_START run_id=11 roll_p=8.0 roll_d=6.0 vel_xy_p=5.0 master_port=11356
+[2026-01-04T14:24:23] RUN_END_OK run_id=11 cost=0.9632716391871273
+[2026-01-04T14:24:23] RUN_START run_id=12 roll_p=8.0 roll_d=8.0 vel_xy_p=5.0 master_port=11357
+[2026-01-04T14:26:22] RUN_END_OK run_id=12 cost=5.533526989476564
+[2026-01-04T14:26:22] RUN_START run_id=13 roll_p=10.0 roll_d=2.0 vel_xy_p=5.0 master_port=11358
+[2026-01-04T14:28:20] RUN_END_OK run_id=13 cost=3.2273505738324366
+[2026-01-04T14:28:20] RUN_START run_id=14 roll_p=10.0 roll_d=3.0 vel_xy_p=5.0 master_port=11359
+[2026-01-04T14:30:26] RUN_END_OK run_id=14 cost=4.646251520652755
+[2026-01-04T14:30:26] RUN_START run_id=15 roll_p=10.0 roll_d=4.0 vel_xy_p=5.0 master_port=11360
+[2026-01-04T14:32:26] RUN_END_OK run_id=15 cost=102.04784052121336
+[2026-01-04T14:32:26] RUN_START run_id=16 roll_p=10.0 roll_d=5.0 vel_xy_p=5.0 master_port=11361
+[2026-01-04T14:34:27] RUN_END_OK run_id=16 cost=101.43234183994103
+[2026-01-04T14:34:27] RUN_START run_id=17 roll_p=10.0 roll_d=6.0 vel_xy_p=5.0 master_port=11362
+[2026-01-04T14:36:27] RUN_END_OK run_id=17 cost=5.707356412545811
+[2026-01-04T14:36:27] RUN_START run_id=18 roll_p=10.0 roll_d=8.0 vel_xy_p=5.0 master_port=11363
+[2026-01-04T14:38:26] RUN_END_OK run_id=18 cost=101.79824819546343
+[2026-01-04T14:38:26] RUN_START run_id=19 roll_p=12.0 roll_d=2.0 vel_xy_p=5.0 master_port=11364
+[2026-01-04T14:40:28] RUN_END_OK run_id=19 cost=4.297770370676664
+[2026-01-04T14:40:28] RUN_START run_id=20 roll_p=12.0 roll_d=3.0 vel_xy_p=5.0 master_port=11365
+[2026-01-04T14:42:29] RUN_END_OK run_id=20 cost=1.0034765301432325
+[2026-01-04T14:42:29] RUN_START run_id=21 roll_p=12.0 roll_d=4.0 vel_xy_p=5.0 master_port=11366
+[2026-01-04T14:44:38] RUN_END_OK run_id=21 cost=12.114783618692893
+[2026-01-04T14:44:38] RUN_START run_id=22 roll_p=12.0 roll_d=5.0 vel_xy_p=5.0 master_port=11367
+[2026-01-04T14:46:47] RUN_END_OK run_id=22 cost=1.9803250748212373
+[2026-01-04T14:46:47] RUN_START run_id=23 roll_p=12.0 roll_d=6.0 vel_xy_p=5.0 master_port=11368
+[2026-01-04T14:48:54] RUN_END_OK run_id=23 cost=1.0089287919502705
+[2026-01-04T14:48:54] RUN_START run_id=24 roll_p=12.0 roll_d=8.0 vel_xy_p=5.0 master_port=11369
+[2026-01-04T14:50:56] RUN_END_OK run_id=24 cost=102.2713667912481
+[2026-01-04T14:50:56] RUN_START run_id=25 roll_p=14.0 roll_d=2.0 vel_xy_p=5.0 master_port=11370
+[2026-01-04T14:53:01] RUN_END_OK run_id=25 cost=101.94253814165447
+[2026-01-04T14:53:01] RUN_START run_id=26 roll_p=14.0 roll_d=3.0 vel_xy_p=5.0 master_port=11371
+[2026-01-04T14:55:02] RUN_END_OK run_id=26 cost=1.032182954368717
+[2026-01-04T14:55:02] RUN_START run_id=27 roll_p=14.0 roll_d=4.0 vel_xy_p=5.0 master_port=11372
+[2026-01-04T14:57:07] RUN_END_OK run_id=27 cost=102.2790811762958
+[2026-01-04T14:57:07] RUN_START run_id=28 roll_p=14.0 roll_d=5.0 vel_xy_p=5.0 master_port=11373
+[2026-01-04T14:59:11] RUN_END_OK run_id=28 cost=1.6510658673653593
+[2026-01-04T14:59:11] RUN_START run_id=29 roll_p=14.0 roll_d=6.0 vel_xy_p=5.0 master_port=11374
+[2026-01-04T15:01:15] RUN_END_OK run_id=29 cost=102.28933815635301
+[2026-01-04T15:01:15] RUN_START run_id=30 roll_p=14.0 roll_d=8.0 vel_xy_p=5.0 master_port=11375
+[2026-01-04T15:03:22] RUN_END_OK run_id=30 cost=2.37614314140629

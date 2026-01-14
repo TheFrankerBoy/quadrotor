@@ -9,6 +9,10 @@ RUN apt-get update \
     build-essential \
     && apt-get clean
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-venv \
+ && rm -rf /var/lib/apt/lists/*
+
 # Get gazebo binaries
 RUN echo "deb http://packages.osrfoundation.org/gazebo/ubuntu `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list \
     && wget http://packages.osrfoundation.org/gazebo.key -O - | apt-key add - \

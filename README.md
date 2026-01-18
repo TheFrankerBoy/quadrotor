@@ -34,6 +34,20 @@ Está enfocada a un nivel de abstracción más alto, similar al flujo de trabajo
 
 ---
 
+### 🤝 Reparto de tareas
+
+Aunque cada integrante ha tenido un mayor peso en una de las partes, todos han participado en ambos bloques para garantizar una visión global del sistema.
+
+| Integrante | PX4 / Navegación (SITL) | Control a bajo nivel |
+|----------|--------------------------|----------------------|
+| **Antonio Lago Solís** | Configuración de PX4 SITL, integración con Gazebo, programación de misiones en QGroundControl, evitación de obstáculos con LiDAR, ejecución centralizada mediante scripts | Apoyo en análisis de resultados e integración conceptual con el control |
+| **Heliodoro Tejada Rodríguez** | Estudio de la arquitectura de PX4, análisis del control en cascada, validación de misiones y análisis de logs con PX4 Flight Review | Apoyo en la interpretación del comportamiento dinámico |
+| **Francisco Fuentes Campos** | Apoyo en ejecución de simulaciones y análisis comparativo | Implementación y ajuste de controladores, seguimiento de trayectorias, análisis de estabilidad |
+| **Javier Santos Martínez** | Apoyo en validación de trayectorias y flujo de misión | Modelado del sistema, diseño de estrategias de control y evaluación del rendimiento |
+| **Daniel López Rubio** | Apoyo en simulaciones PX4 y supervisión de misiones | Implementación de algoritmos de control, simulación y análisis comparativo |
+
+De forma transversal, todos los miembros han participado en la discusión técnica, análisis de resultados, elaboración de la memoria y preparación de la presentación final.
+
 ## ℹ️ Nota
 La rama `main` actúa únicamente como **punto de entrada y organización del proyecto**.  
 Todo el código y la documentación detallada se encuentran en las ramas indicadas.

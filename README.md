@@ -33,6 +33,7 @@ ros2 launch sjtu_drone_bringup sjtu_drone_bringup.launch.py
 ros2 run sjtu_drone_controller lqr_controller
 ros2 run sjtu_drone_controller trajectory_follower --ros-args -p mode:=lqr
 ```
+---
 
 ## Nodos
 
@@ -136,6 +137,7 @@ Ejemplo de cambio en caliente:
 ros2 param set /trajectory_follower mode pid
 ros2 param set /trajectory_follower mode lqr
 ```
+---
 
 ### lqr_controller
 

@@ -71,7 +71,7 @@ Las misiones se crean y cargan directamente desde **QGroundControl**, incluyendo
 - Altitudes
 - Velocidades
 
-Durante la ejecución, el sistema de evitación de obstáculos puede modificar localmente la trayectoria para evitar colisiones, manteniendo el objetivo de la misión siempre que sea posible.
+Durante la ejecución, el sistema de evitación de obstáculos puede modificar localmente la trayectoria para evitar colisiones, manteniendo el objetivo de la misión siempre que sea posible. La misión a ejecutar en la demostración puede ser encontrada dentro de la carpeta _scripts_ facilitando así su uso en QGC.
 
 > ⚠️ La evitación es **reactiva**, no un planificador global.  
 > Para un comportamiento estable se recomienda usar velocidades moderadas.
